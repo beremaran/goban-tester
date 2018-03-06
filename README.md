@@ -29,29 +29,28 @@ See also __Useful Resources__ which also contains link to _GTP Command Reference
    **Warning**: The name `gtester` conflicts with GLib unit test tool. You may want to run gtester with `python -m gtester`
  
 ### Usage
-    usage: gtester [-h] [-v] [--goban_args GOBAN_ARGS] [--gnugo GNUGO] [--sgf SGF]
-                   [--clear-cache]
-                   goban_path
+ * Implement a board parser for your implementation by extending `gtester.parser.Parser` class.
+    * If your output is compatible with gnugo output it is not required.
+ * If you omit `goban_X_parser` parameter in `GobanTester` constructor, `GnuGoParser` will be used
+ 
+ ```python
+    from gtester import GNU_GO_COMMAND
+    from gtester.parser import Parser
+    from gtester.tester import GobanTester
     
-    Tests your goban implementation by playing with both gnugo and your
-    implementation.
-    
-    positional arguments:
-      goban_path            Path to executable of your implementation of goban
-    
-    optional arguments:
-      -h, --help            show this help message and exit
-      -v, --version         show program's version number and exit
-      --goban_args GOBAN_ARGS
-                            Goban arguments
-      --gnugo GNUGO         Path to gnugo binary
-      --sgf SGF             Test board with specific SGF file
-      --clear-cache         Deletes downloaded games
+    class ExampleParser(Parser):
+        ...
+        
+    # GobanTester(goban_1, goban_2, goban_1_parser=None, goban_2_parser=None ...
+    tester = GobanTester(["example_goban", ["--mode gtp"]], GNU_GO_COMMAND, ExampleParser())
+```
 
 
 Test gnugo goban implementation against itself:
 
-    python main.py gnugo --goban_args "--mode gtp" 
+```bash
+    python main.py gnugo --goban_args "--mode gtp"
+```
 
  
 ## Utilities

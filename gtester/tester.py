@@ -23,10 +23,13 @@ from __future__ import print_function
 import gtester.sgf as sgflib
 from gtester.gtp import GTPMetaMachine, InvalidGTPResponse
 from gtester.taskmaster import start_process
+from gtester.parser import GnuGoParser
 
 
 class GobanTester:
-    def __init__(self, goban_1, goban_2, sgf_file=None,
+    def __init__(self, goban_1, goban_2, goban_1_parser=None,
+                 goban_2_parser=None,
+                 sgf_file=None,
                  sgf_str=None):
         self.meta = GTPMetaMachine()
 
@@ -35,6 +38,16 @@ class GobanTester:
         goban_2 = start_process(goban_2[0], goban_2[1])
         self.goban_1 = self.meta.register_goban(goban_1)
         self.goban_2 = self.meta.register_goban(goban_2)
+
+        if goban_1_parser is not None:
+            self.goban_1_parser = goban_1_parser
+        else:
+            self.goban_1_parser = GnuGoParser()
+
+        if goban_2_parser is not None:
+            self.goban_2_parser = goban_2_parser
+        else:
+            self.goban_2_parser = GnuGoParser()
 
         # ====
         if sgf_file is not None:
@@ -95,14 +108,16 @@ class GobanTester:
         for goban in [self.goban_1, self.goban_2]:
             self.meta.send(goban, 'quit')
 
-    @staticmethod
-    def _compare_boards(board_1, board_2):
+    def _compare_boards(self, board_1, board_2):
         """
         Compares boards and returns different indexes
         :param board_1:
         :param board_2:
         :return:
         """
+        board_1 = self.goban_1_parser.parse(board_1)
+        board_2 = self.goban_2_parser.parse(board_2)
+
         board_1 = [ord(c) for c in board_1]
         board_2 = [ord(c) for c in board_2]
 
