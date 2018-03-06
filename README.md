@@ -22,7 +22,11 @@ See also [Useful Resources](#Useful Resources) which also contains link to _GTP 
  
 ### Installation
  * Fork and clone this repository
- * Install it from PyPI (WIP)
+ * Install it from PyPI
+    
+        pip install gtester
+        
+   **Warning**: The name `gtester` conflicts with GLib unit test tool. You may want to run gtester with `python -m gtester`
  
 ### Usage
     usage: gtester [-h] [-v] [--goban-args GOBAN_ARGS] [--gnugo GNUGO] [--sgf SGF]
