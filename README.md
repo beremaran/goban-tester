@@ -1,4 +1,5 @@
 # Goban Tester
+![version-0-0-2](https://img.shields.io/badge/version-0.0.2-blue.svg)
 Tests your goban implementation by playing with both gnugo and your implementation.
 
 Downloads 10 random games from [gokifu.com](http://gokifu.com/index.php) homepage as SGF and simulates games with implementations.
