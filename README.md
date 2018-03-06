@@ -10,7 +10,7 @@ Downloads 10 random games from [gokifu.com](http://gokifu.com/index.php) homepag
  * Goban implementation with GTP interface
  
 #### GTP Requirements for Gobans
-See also [Useful Resources](#Useful Resources) which also contains link to _GTP Command Reference_
+See also __Useful Resources__ which also contains link to _GTP Command Reference_
 
  * You must obey GTP v2 specifications.
  * Implement those commands:
@@ -29,25 +29,25 @@ See also [Useful Resources](#Useful Resources) which also contains link to _GTP 
    **Warning**: The name `gtester` conflicts with GLib unit test tool. You may want to run gtester with `python -m gtester`
  
 ### Usage
-    usage: gtester [-h] [-v] [--goban-args GOBAN_ARGS] [--gnugo GNUGO] [--sgf SGF]
-                   [--test-games TEST_GAMES]
-                   goban-path
+    usage: gtester [-h] [-v] [--goban_args GOBAN_ARGS] [--gnugo GNUGO] [--sgf SGF]
+                   [--clear-cache]
+                   goban_path
     
     Tests your goban implementation by playing with both gnugo and your
     implementation.
     
     positional arguments:
-      goban-path            Path to executable of your implementation of goban
+      goban_path            Path to executable of your implementation of goban
     
     optional arguments:
       -h, --help            show this help message and exit
       -v, --version         show program's version number and exit
-      --goban-args GOBAN_ARGS
+      --goban_args GOBAN_ARGS
                             Goban arguments
       --gnugo GNUGO         Path to gnugo binary
       --sgf SGF             Test board with specific SGF file
-      --test-games TEST_GAMES
-                            Amount of games to test with
+      --clear-cache         Deletes downloaded games
+
 
 Test gnugo goban implementation against itself:
 
