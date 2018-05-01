@@ -76,8 +76,10 @@ class GTPMetaMachine:
                 command[1] = 'W' if command[1] == 'B' else 'B'
             command = ' '.join(command)
 
+        command = command.encode('utf-8')
+
         goban.stdin.write(command)
-        goban.stdin.write('\n')
+        goban.stdin.write(b'\n')
         goban.stdin.flush()
 
         response = self._read_stream(goban.stdout)
@@ -109,7 +111,7 @@ class GTPMetaMachine:
         out = ""
         linefeed_seen = False
         while True:
-            char = stream.read(1)
+            char = stream.read(1).decode('ascii')
             out += char
             if linefeed_seen and char == '\n':
                 break
