@@ -47,8 +47,7 @@ if __name__ == "__main__":
     args = argparse.ArgumentParser(
         prog="gtester",
         description="Tests your goban implementation by playing with both "
-                    "gnugo and your implementation.",
-        version=_VERSION
+                    "gnugo and your implementation."
     )
 
     args.add_argument(
@@ -57,7 +56,7 @@ if __name__ == "__main__":
     )
 
     args.add_argument(
-        "--goban_args",
+        "--goban-args",
         help="Goban arguments"
     )
 
