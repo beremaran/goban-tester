@@ -31,7 +31,6 @@ from bs4 import BeautifulSoup
 from gtester import GNU_GO_COMMAND
 from gtester.gtp import InvalidGTPResponse
 
-_SGF_PATTERN = "([\w]+)[[]([a-z0-9\sA-Z\.-]+)[]]"
 _VALID_SGF_COMMANDS = [
     'B', 'W', 'SZ', 'RE'
     # move by black, move by white
@@ -86,16 +85,16 @@ def sgf_download():
                     tester.run()
                 except InvalidGTPResponse:
                     error = True
-                    print('Encountered illegal played game, redownloading ..')
+                    print('Encountered illegally played game, redownloading ..')
                 tester.kill_gobans()
 
         print('Done. Writing downloaded games to cache ({}) ..'.format(
             games_file))
-        games_file = open(games_file, 'w')
+        games_file = open(games_file, 'wb')
         pickle.dump(r, games_file)
     else:
         print('Found cached games, reading from cache ..')
-        games_file = open(games_file, 'r')
+        games_file = open(games_file, 'rb')
         r = pickle.load(games_file)
 
     games_file.close()
@@ -155,11 +154,16 @@ def parse(text):
     :param text:
     :return:
     """
-    all_matches = re.findall(_SGF_PATTERN, text)
-    for i, match in enumerate(all_matches):
-        all_matches[i] = list(match)
+    r = re.compile(r'([\w]+)[[]([a-z0-9\sA-Z\.-]+)[]]', re.IGNORECASE)
+    matches = []
 
-    return all_matches
+    if type(text) == bytes:
+        text = text.decode('utf-8')
+
+    for match in re.findall(r, text):
+        matches.append(list(match))
+
+    return matches
 
 
 def parse_file(file_path):
