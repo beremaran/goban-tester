@@ -102,7 +102,7 @@ class GobanTester:
                 print('Reversing colors ..')
 
         if not error_occured:
-            print('All test passed.')
+            print('All tests passed.')
 
     def kill_gobans(self):
         for goban in [self.goban_1, self.goban_2]:
@@ -118,12 +118,4 @@ class GobanTester:
         board_1 = self.goban_1_parser.parse(board_1)
         board_2 = self.goban_2_parser.parse(board_2)
 
-        board_1 = [ord(c) for c in board_1]
-        board_2 = [ord(c) for c in board_2]
-
-        out = [
-            b1 - b2
-            for b1, b2 in zip(board_1, board_2)
-        ]
-
-        return [i for i, e in enumerate(out) if e != 0]
+        return [i for i in range(len(board_2)) if board_1[i] != board_2[i]]
