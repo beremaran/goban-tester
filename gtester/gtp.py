@@ -93,10 +93,9 @@ class GTPMetaMachine:
         :return:
         """
         # remove "="
-        if response[0] == "=":
+        if response[0] in ["=", "?"]:
             response = response[1:]
         else:
-            print(response)
             raise InvalidGTPResponse
 
         return response.strip()
@@ -116,5 +115,4 @@ class GTPMetaMachine:
             if linefeed_seen and char == '\n':
                 break
             linefeed_seen = char == '\n'
-
         return out.strip()
