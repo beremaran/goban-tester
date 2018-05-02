@@ -18,6 +18,8 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
+import re
+
 
 class Parser:
     """
@@ -45,14 +47,13 @@ class GnuGoParser(Parser):
         :param state:
         :return:
         """
-        b = state.splitlines()
-        b = [
-            r[1:len(b[0]) + 1]
-                .replace(' ', '')[1:]
-                .replace('X', 'W')
-                .replace('O', 'B')
-                .replace('+', '.')
-            for r in b[1:-1]
-        ]
+        b = ''.join(state.splitlines()[1:-1])
+        b = re.sub(
+            r'\s*(WHITE|BLACK)\s+[(][OX][)]\s+has\s+captured\s+\d+\s+stones',
+            '', b
+        )
+        b = re.sub(r'\d+', '', b)
+        b = re.sub(r'\s+', '', b)
+        b = b.replace('X', 'W').replace('O', 'B').replace('+', '.')
 
-        return ''.join(b)
+        return ''.join(b).strip()
