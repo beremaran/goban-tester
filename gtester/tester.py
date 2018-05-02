@@ -72,31 +72,55 @@ class GobanTester:
                 for goban in [self.goban_1, self.goban_2]:
                     self.meta.send(goban, 'clear_board')
 
-                print('Game {:-2d}/{}'.format(i + 1, len(self.games)), end=' ')
-                game_length = len(game)
+                print('Game {:-2d}/{}'.format(i + 1, len(self.games)))
                 for j, cmd in enumerate(game):
-                    if j % (game_length / 10) == 0:
-                        print('.', end='')
+                    print("{:3d}) {}".format(j + 1, cmd))
+
+                    boards = [
+                        self.meta.send(goban, 'showboard')
+                        for goban in [self.goban_1, self.goban_2]
+                    ]
+
+                    responses = []
 
                     for goban in [self.goban_1, self.goban_2]:
                         try:
-                            self.meta.send(goban, cmd,
-                                           reverse_colors=reverse_color)
+                            resp = self.meta.send(goban, cmd,
+                                                  reverse_colors=reverse_color)
+                            responses.append(resp)
                         except InvalidGTPResponse as e:
+                            print("Command:")
                             print(cmd)
-                            raise e
+                            print("Response:")
+                            print(resp)
+                            print("  ", boards[0])
+                            print("  ", boards[1])
+                            self.kill_gobans()
+                            exit(1)
 
-                result = [
-                    self.meta.send(goban, 'showboard')
-                    for goban in [self.goban_1, self.goban_2]
-                ]
+                    prev_boards = boards
 
-                result = self._compare_boards(result[0], result[1])
-                if len(result) > 0:
-                    print('Oops!')
-                    error_occured = True
-                else:
-                    print('OK')
+                    boards = [
+                        self.meta.send(goban, 'showboard')
+                        for goban in [self.goban_1, self.goban_2]
+                    ]
+
+                    result = self._compare_boards(boards[0], boards[1])
+                    if len(result) > 0:
+                        print('Oops!')
+                        print(result)
+                        print(responses)
+                        print("Previous boards:")
+                        print("  ", prev_boards[0])
+                        print("  ", prev_boards[1])
+                        print("Current boards:")
+                        print("  ", boards[0])
+                        print("  ", boards[1])
+                        error_occured = True
+                        self.kill_gobans()
+                        exit(1)
+                    else:
+                        print('OK')
 
             if not error_occured:
                 print('Reversing colors ..')
@@ -118,4 +142,8 @@ class GobanTester:
         board_1 = self.goban_1_parser.parse(board_1)
         board_2 = self.goban_2_parser.parse(board_2)
 
-        return [i for i in range(len(board_2)) if board_1[i] != board_2[i]]
+        if board_1 == board_2:
+            return []
+        else:
+            return [(i, board_1[i], board_2[i]) for i in range(len(board_2)) if
+                    board_1[i] != board_2[i]]
