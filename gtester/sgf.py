@@ -101,13 +101,13 @@ def sgf_download():
     return r
 
 
-def _coord_sgf2gtp(sgf_coordinate):
+def _coord_sgf2gtp(board_size, sgf_coordinate):
     x, y = sgf_coordinate[0], sgf_coordinate[1]
     x, y = ord(x), ord(y)
 
     return '{}{}'.format(
         _GNU_GO_VERTICAL_COORDINATES[x - ord('a')],
-        y - ord('a') + 1
+        board_size - (y - ord('a'))
     )
 
 
@@ -117,16 +117,18 @@ def sgf2gtp(sgf_commands):
     :param sgf_commands:
     :return:
     """
+    sz = 19
     sgf_commands = filter_commands(sgf_commands)
     for i, cmd in enumerate(sgf_commands):
         sgf_commands[i][1] = [sgf_commands[i][1]]
 
         if cmd[0] in ['B', 'W']:
-            sgf_commands[i][1][0] = _coord_sgf2gtp(sgf_commands[i][1][0])
+            sgf_commands[i][1][0] = _coord_sgf2gtp(sz, sgf_commands[i][1][0])
             sgf_commands[i][1].insert(0, cmd[0])
             sgf_commands[i][0] = 'play'
         elif cmd[0] == 'SZ':
             sgf_commands[i][0] = 'boardsize'
+            sz = int(sgf_commands[i][1][0])
 
         sgf_commands[i] = ' '.join(
             [sgf_commands[i][0], ' '.join(sgf_commands[i][1])]
