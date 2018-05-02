@@ -19,4 +19,6 @@
 """
 
 _DEFAULT_BOARD_SIZE = 19
-GNU_GO_COMMAND = ['gnugo', ['--mode', 'gtp']]
+GNU_GO_COMMAND = ['gnugo',
+                  ['--mode', 'gtp', '--resign-allowed', '--chinese-rules',
+                   '--forbid-suicide', '--positional-superko']]
